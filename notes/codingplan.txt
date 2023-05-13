@@ -1,0 +1,26 @@
+Coding plan for capstone:
+-Transfer the html version to a clean file /done
+-Make a database/done
+-establish database connection/done
+-implement the login system/done
+    -restrictions/done
+    -validation of page access/done
+    -basic session management/done
+-manipulate graphs/done
+-make db trigger for notification/done
+-array manipulation/done
+-implement the auto refresh extension in browser with xampp ---
+-make report /done
+---------------------------------------------------------------
+to do:
+
+-database final version
+-adjust query 
+-style login page
+-style notification
+-faqs
+
+optional:
+    -term of use
+    -privacy policy
+
