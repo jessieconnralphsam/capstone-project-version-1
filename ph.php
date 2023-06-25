@@ -204,7 +204,7 @@ $date = $datetime->format('F-d-Y');
           <div class="card-move-up waves-effect waves-block waves-light">
             <div class="move-up cyan darken-1">
                <div>
-                  <span class="chart-title white-text"> <strong>pH Level</strong></span>
+                  <span class="chart-title white-text"> <strong>Acidity</strong></span>
                   <div class="chart-revenue cyan darken-2 white-text">
                      <p class="chart-revenue-total"><?php echo $date; ?></p>
                      <p class="chart-revenue-per"><i class="material-icons">arrow_drop_up</i> <strong>Readings</strong></p>
@@ -219,7 +219,7 @@ $date = $datetime->format('F-d-Y');
       <div class="col s12 l3 " >
          <div class="card animate fadeRight">
             <div class="card-content">
-               <h4 class="card-title mb-0">pH level Conversion</h4>
+               <h4 class="card-title mb-0">Conversion</h4>
                <div class="conversion-ration-container mt-8">
                 <img src="image/pH-Scale-Diagram.jpg" alt="Description of the image" width="160" height="340">                  
                </div>
