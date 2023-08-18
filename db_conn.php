@@ -1,9 +1,8 @@
 <?php 
-//login system
 $sName = "localhost";
 $uName = "root";
 $pass = "";
-$db_name = "hydroponicsnft_db";
+$db_name = "hydro";
 
 try {
     $conn = new PDO("mysql:host=$sName;dbname=$db_name", 

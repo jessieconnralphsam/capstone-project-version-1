@@ -6,8 +6,7 @@ Contact: jessieconnralph.sam@msugensan.edu.ph
 Capstone Group: Capstonics(2023)
 -->
 <!-- database connection -->
-<?php include "database_connection.php";?>
-
+<?php include "data_con.php";?>
 <!--login validation-->
 <?php 
 session_start(); // start the session
@@ -18,20 +17,20 @@ if(!isset($_SESSION['user_id'])){ // check if the session variable is set
 ?>
 <!--C.R acidity -->
 <?php
-      $query = "select * from acidity ORDER BY cdate DESC LIMIT 1";
+      $query = "SELECT * FROM acidity ORDER BY acid_cdate DESC LIMIT 1";
       $result = mysqli_query($conn, $query);
       while ($row = mysqli_fetch_assoc($result)) {
-         $data_acidity[] = $row['acidity'];
-         $data_date[] = $row['cdate'];
+         $data_acidity[] = $row['acid_readings'];
+         $data_date[] = $row['acid_cdate'];
       }
    ?>
 
-<!--C.R TDS -->
+<!--Current Readings TDS -->
 <?php
-      $query = "select * from ectemp ORDER BY cdate DESC LIMIT 1";
+      $query = "SELECT * FROM total_dissolved_solids ORDER BY tds_cdate DESC LIMIT 1";
       $result = mysqli_query($conn, $query);
       while ($row = mysqli_fetch_assoc($result)) {
-         $data_TDS[] = $row['EC'];
+         $data_TDS[] = $row['tds_readings'];
       }
    ?>
 
@@ -60,6 +59,43 @@ $date = $datetime->format('F-d-Y');
     $class = 'red-text';
   }
 ?>
+<?php 
+$data = $data_acidity[0]; // assuming $data_acidity[0] contains the value to be displayed
+$color = "";
+if ($data < 7) {
+    $color = "red";
+} elseif ($data > 7) {
+    $color = "red";
+} else {
+    $color = "green"; // if value is exactly 7, set color to green
+}
+?>
+
+<!-- data for table -->
+<?php
+  $datequery="SELECT * FROM temperature ORDER BY temp_cdate DESC";
+  $dateconnect=mysqli_query($conn,$datequery);
+  $datenum=mysqli_num_rows($dateconnect);
+
+  $flquery = "SELECT * FROM waterflow ORDER BY flow_cdate DESC";
+  $flconnect = mysqli_query($conn, $flquery);
+  $flnum = mysqli_num_rows($flconnect);
+
+  $levelquery = "SELECT * FROM waterlevel ORDER BY level_cdate DESC";
+  $levelconnect = mysqli_query($conn, $levelquery);
+  $levelnum = mysqli_num_rows($levelconnect);
+
+  $tdsquery = "SELECT * FROM total_dissolved_solids ORDER BY tds_cdate DESC";
+  $tdsconnect = mysqli_query($conn, $tdsquery);
+  $tdsnum = mysqli_num_rows($tdsconnect);
+
+  $phquery = "SELECT * FROM acidity ORDER BY acid_cdate DESC";
+  $phconnect = mysqli_query($conn, $phquery);
+  $phnum = mysqli_num_rows($phconnect);
+?>
+
+
+
 
 <html class="loading" lang="en" data-textdirection="ltr">
   <!-- BEGIN: Head-->
@@ -99,7 +135,7 @@ $date = $datetime->format('F-d-Y');
               <li>
                  <a class="waves-effect waves-block waves-light notification-button" href="javascript:void(0);" data-target="notifications-dropdown" href="#" id="notifications"><i  class="fa fa-bell-o" aria-hidden="true" style="font-size: 20px;"><small class="count"><?php echo mysqli_num_rows($res); ?></small></i></a>
               </li>
-              <li><a class="waves-effect waves-block waves-light profile-button" href="javascript:void(0);" data-target="profile-dropdown"><span class="avatar-status avatar-online"><img src="image/profile.jpg" alt="avatar"><i></i></span></a></li>           
+              <li><a class="waves-effect waves-block waves-light profile-button" href="javascript:void(0);" data-target="profile-dropdown"><span class="avatar-status avatar-online"><img src="image/hydroponicslogo.jpeg" alt="avatar"><i></i></span></a></li>           
             </ul>
             <!-- notifications-dropdown-->
             <ul class="dropdown-content" id="notifications-dropdown">
@@ -112,8 +148,10 @@ $date = $datetime->format('F-d-Y');
                 foreach ($res as $item) {
                   $formatted_date = date("F-d-Y h:i A", strtotime($item["cdate"]));
                   ?>
-                  <li><?php echo $item["text"]; ?></li>
-                  <li style="color:blue;"><?php echo $formatted_date; ?></li>
+                  <li>
+                    <span style="color: red;">Warning! <?php echo $item["notif_sname"]; ?> reading: <?php echo $item["readings"]; ?></span>
+                    <?php echo $formatted_date; ?>
+                  </li>
                   <li class="divider"></li> <!-- Add this line after each notification -->
                   <?php
                 }
@@ -153,36 +191,13 @@ $date = $datetime->format('F-d-Y');
         <h1 class="logo-wrapper"><a class="brand-logo darken-1" href="ph.php"><span class="logo-text hide-on-med-and-down"style="font-size:25px;">Hydroponics NFT</span></a><a class="navbar-toggler" href="#"></a></h1>
       </div>
       <ul class="sidenav sidenav-collapsible leftside-navigation collapsible sidenav-fixed menu-shadow" id="slide-out" data-menu="menu-navigation" data-collapsible="menu-accordion">
-        <li class="active bold"><a class="collapsible-header waves-effect waves-cyan " href="JavaScript:void(0)"><i class="material-icons">dashboard</i><span class="menu-title" data-i18n="Dashboard">Dashboard</span><span class="badge badge pill blue float-right mr-10">2</span></a>
+        <li class="active bold"><a class="collapsible-header waves-effect waves-cyan " href="JavaScript:void(0)"><i class="material-icons">dashboard</i><span class="menu-title" data-i18n="Dashboard">Dashboard</span><span class="badge badge pill blue float-right mr-10">1</span></a>
           <div class="collapsible-body">
             <ul class="collapsible collapsible-sub" data-collapsible="accordion">
               <li class=""><a class="" href="main.php"><i class="material-icons">radio_button_unchecked</i><span data-i18n="Modern">Main</span></a>
-              <li><a href="water_metrics.php"><i class="material-icons">radio_button_unchecked</i><span data-i18n="Analytics">Water Metrics</span></a>
               </li>
             </ul>
           </div>
-        </li>        
-        <li class="navigation-header"><a class="navigation-header-text">Applications</a><i class="navigation-header-icon material-icons">more_horiz</i>
-        </li>
-        
-          <li class="bold"><a class="collapsible-header waves-effect waves-cyan " href="JavaScript:void(0)"><i class="material-icons">folder</i><span class="menu-title" data-i18n="Invoice">Report</span></a>
-            <div class="collapsible-body">
-              <ul class="collapsible collapsible-sub" data-collapsible="accordion">
-               <li><a href="system_activity_list.php"><i class="material-icons">radio_button_unchecked</i><span data-i18n="Invoice View">System Activity</span></a>
-               </li>
-                <li><a href="acidity.php"><i class="material-icons">radio_button_unchecked</i><span data-i18n="Invoice View">pH Level</span></a>
-                </li>
-                <li><a href="temperature.php"><i class="material-icons">radio_button_unchecked</i><span data-i18n="Invoice Edit">Temperature</span></a>
-                </li>
-                <li><a href="conductivity.php"><i class="material-icons">radio_button_unchecked</i><span data-i18n="Invoice Add">Conductivity</span></a>
-                </li>
-                <li><a href="waterflow.php"><i class="material-icons">radio_button_unchecked</i><span data-i18n="Invoice Add">Waterflow</span></a>
-                </li>
-                <li><a href="waterlevel.php"><i class="material-icons">radio_button_unchecked</i><span data-i18n="Invoice Add">Waterlevel</span></a>
-                </li>
-              </ul>
-            </div>
-          </li>
       </ul>
       <div class="navigation-background"></div><a class="sidenav-trigger btn-sidenav-toggle btn-floating btn-medium waves-effect waves-light hide-on-large-only" href="#" data-target="slide-out"><i class="material-icons">menu</i></a>
     </aside>
@@ -204,7 +219,7 @@ $date = $datetime->format('F-d-Y');
           <div class="card-move-up waves-effect waves-block waves-light">
             <div class="move-up cyan darken-1">
                <div>
-                  <span class="chart-title white-text"> <strong>Acidity</strong></span>
+                  <span class="chart-title white-text"> <strong>Water Quality</strong></span>
                   <div class="chart-revenue cyan darken-2 white-text">
                      <p class="chart-revenue-total"><?php echo $date; ?></p>
                      <p class="chart-revenue-per"><i class="material-icons">arrow_drop_up</i> <strong>Readings</strong></p>
@@ -214,14 +229,63 @@ $date = $datetime->format('F-d-Y');
                </div>               
             </div>
          </div>
+         <div class="card-content">
+                  <a class="btn-floating btn-move-up waves-effect waves-light red accent-2 z-depth-4 right">
+                     <i class="material-icons activator">folder</i>
+                  </a>
+                  <div class="col s12 m3 l3">
+                    
+                  </div>                  
+                  <div class="col s12 m5 l6">                     
+                  </div>
+          </div>
+          <div class="card-reveal">
+                  <span class="card-title grey-text text-darken-4">Readings <i
+                        class="material-icons right">close</i> <br>
+                        <a href="download.php" style="text-decoration: underline;">Download CSV</a>
+                  </span>
+                  <table class="responsive-table">
+                     <thead>
+                        <tr>
+                           <th>Date & Time</th>
+                           <th>Acidity</th>
+                           <th>Total Dissolve solids</th>
+                           <th>Temperature</th>
+                           <th>Water Flow</th>
+                           <th>Water level</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                     <?php
+                        if ($datenum > 0){
+                           while($data=mysqli_fetch_assoc($dateconnect)){
+                              $flowdata = mysqli_fetch_assoc($flconnect);
+                              $ldata = mysqli_fetch_assoc($levelconnect);
+                              $acdata = mysqli_fetch_assoc($phconnect);
+                              $tddata = mysqli_fetch_assoc($tdsconnect);
+                              echo "
+                              <tr>
+                              <td> ".date('F-d-Y H:i A', strtotime($data['temp_cdate']))."</td>
+                              <td>pH of ".$acdata['acid_readings']."</td>
+                              <td> ".$tddata['tds_readings']." ppm</td>
+                              <td> ".$data['temp_readings']."  °C</td>
+                              <td> ".$flowdata['flow_readings']." L/min</td>
+                              <td> ".$ldata['level_readings']." m</td>
+                              ";
+                           }
+                        }
+                     ?>
+                     </tbody>
+                  </table>
+            </div>
          </div>
       </div>
       <div class="col s12 l3 " >
          <div class="card animate fadeRight">
             <div class="card-content">
-               <h4 class="card-title mb-0">Conversion</h4>
+               <h4 class="card-title mb-0">pH Conversion</h4>
                <div class="conversion-ration-container mt-8">
-                <img src="image/pH-Scale-Diagram.jpg" alt="Description of the image" width="160" height="340">                  
+                  <img src="image/pH scale.png" alt="Description of the image" width="205" height="410">                
                </div>
                <p class="medium-small center-align">Current Reading</p>
                <h5 class="center-align mb-0 mt-0"> <span style="color:red;"><?php echo $data_acidity[0]; ?></span></h5>
@@ -244,7 +308,7 @@ $date = $datetime->format('F-d-Y');
          <div class="card recent-buyers-card animate fadeUp"style="width: 500px;">
             <div class="card-content">
                <h4 class="card-title mb-0">Total Dissolved Solids Conversion</h4>
-               <img src="image/TDS.png" alt="Description of the image" width="450" height="230">
+               <img src="image/TDS.png" alt="Description of the image" width="460" height="230">
                <h4 class="card-title mb-0">Current Reading: <span class="<?php echo $class; ?>"><?php echo $value; ?> </span> ppm</h4>
             </div>
          </div>
@@ -372,9 +436,6 @@ $date = $datetime->format('F-d-Y');
       });
     });
   </script>
-  
-
-
 <!-- Script: Bargraph-->
 <!------------------------------------------------------------------------------>
 <script type="text/javascript">
@@ -386,17 +447,29 @@ $date = $datetime->format('F-d-Y');
        ['Date&Time', 'TDS', 'Temp'],
        //data config php
        <?php
-            $query = "select * from ectemp ORDER BY cdate DESC LIMIT 1";
-            $res = mysqli_query($conn, $query);
-            while ($data = mysqli_fetch_array($res)) {
-                $datetime = date('m-d-Y h:i A', strtotime($data['cdate'])); // add "AM" or "PM"
-                $electric_con = $data['EC'];
-                $temperature = $data['Temperature'];              
-           ?>
-           ['<?php echo $datetime;?>',<?php echo $electric_con;?>,<?php echo $temperature;?>],   
-           <?php   
-            }
-       ?>                
+          $queryTDS = "SELECT * FROM total_dissolved_solids ORDER BY tds_cdate DESC LIMIT 1";
+          $resTDS = mysqli_query($conn, $queryTDS);
+
+          while ($dataTDS = mysqli_fetch_array($resTDS)) {
+              $datetime = date('m-d-Y h:i A', strtotime($dataTDS['tds_cdate'])); // add "AM" or "PM"
+              $electric_con = $dataTDS['tds_readings'];
+          ?>
+
+          <?php
+              $queryTemperature = "SELECT * FROM temperature ORDER BY temp_cdate DESC LIMIT 1";
+              $resTemperature = mysqli_query($conn, $queryTemperature);
+
+              while ($dataTemperature = mysqli_fetch_array($resTemperature)) {
+                  $temperature = $dataTemperature['temp_readings'];
+                  // Rest of the code remains the same as in your original code
+          ?>
+
+          ['<?php echo $datetime;?>', <?php echo $electric_con;?>, <?php echo $temperature;?>],
+
+          <?php   
+              }
+          }
+        ?>                
      ]);
      var options = {
        width: 300,
@@ -468,16 +541,38 @@ $date = $datetime->format('F-d-Y');
    //data block
    var labels = [];
    var data = [];
+   var flowdata = [];
+   var leveldata = [];
   <?php
-      $query = "select * from acidity ORDER BY cdate DESC LIMIT 5";
+      $query = "SELECT * FROM acidity ORDER BY acid_cdate DESC LIMIT 5";
       $result = mysqli_query($conn, $query);
+      $labels = [];
+      $data = [];
+
       while ($row = mysqli_fetch_assoc($result)) {
-         $labels[] = $labels[] = date('h:i A', strtotime($row['cdate']));
-         $data[] = $row['acidity'];
+          $labels[] = date('h:i A', strtotime($row['acid_cdate']));
+          $data[] = $row['acid_readings'];
       }
-   ?>
+
+      $flowquery = "SELECT * FROM waterflow ORDER BY flow_cdate DESC LIMIT 5";
+      $flowresult = mysqli_query($conn, $flowquery);
+      $flowdata = [];
+
+      while ($flowrow = mysqli_fetch_assoc($flowresult)) {
+          $flowdata[] = $flowrow['flow_readings'];
+      }
+
+      $levelquery = "SELECT * FROM waterlevel ORDER BY level_cdate DESC LIMIT 5";
+      $levelresult = mysqli_query($conn, $levelquery);
+      $leveldata = [];
+
+      while ($levelrow = mysqli_fetch_assoc($levelresult)) {
+          $leveldata[] = $levelrow['level_readings'];
+      }
+  ?>
+   
    var revenueLineChartData = {
-      labels:['Current', <?php echo json_encode($labels[2]); ?>,<?php echo json_encode($labels[4]); ?>, <?php echo json_encode($labels[6]); ?>,<?php echo json_encode($labels[8]); ?>],
+      labels:['Current', <?php echo json_encode($labels[0]); ?>,<?php echo json_encode($labels[1]); ?>, <?php echo json_encode($labels[2]); ?>,<?php echo json_encode($labels[3]); ?>],
       datasets: [
          {
             label: "Acidity",
@@ -486,15 +581,45 @@ $date = $datetime->format('F-d-Y');
             borderColor: "#d1faff",
             pointBorderColor: "#d1faff",
             pointBackgroundColor: "#00bcd4",
-            pointHighlightFill: "#d1faff",
-            pointHoverBackgroundColor: "#d1faff",
+            pointHighlightFill: "#A3D977",
+            pointHoverBackgroundColor: "#A3D977",
             borderWidth: 2,
             pointBorderWidth: 2,
             pointHoverBorderWidth: 4,
             pointRadius: 4
          },
+         {
+            label: "Water Flow",
+            data: <?php echo json_encode($flowdata); ?>,
+            borderDash: [2, 5],
+            backgroundColor: "rgba(128, 222, 234, 0.2)",
+            borderColor: "#80deea",
+            pointBorderColor: "#80deea",
+            pointBackgroundColor: "#00bcd4",
+            pointHighlightFill: "#FFD966",
+            pointHoverBackgroundColor: " #FFD966",
+            borderWidth: 2,
+            pointBorderWidth: 2,
+            pointHoverBorderWidth: 4,
+            pointRadius: 4
+         },
+         {
+            label: "Water Level",
+            data: <?php echo json_encode($leveldata); ?>,
+            borderDash: [15, 5],
+            backgroundColor: "rgba(128, 222, 234, 0.2)",
+            borderColor: "#80deea",
+            pointBorderColor: "#80deea",
+            pointBackgroundColor: "#00bcd4",
+            pointHighlightFill: "#FFAB91",
+            pointHoverBackgroundColor: "#FFAB91",
+            borderWidth: 2,
+            pointBorderWidth: 2,
+            pointHoverBorderWidth: 4,
+            pointRadius: 4
+         }
          
-      ]
+        ]
    };
    //config block
    var revenueLineChartConfig = {
@@ -507,5 +632,5 @@ $date = $datetime->format('F-d-Y');
       revenueLineChart = new Chart(revenueLineChartCTX, revenueLineChartConfig);
    };
 })(window, document, jQuery);
- </script>
+</script>
 <!-- End Script: line chart-->

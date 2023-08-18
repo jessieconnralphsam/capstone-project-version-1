@@ -1,6 +1,5 @@
 <?php
-
-include("database_connection.php");
+include("data_con.php");
 $sql = "UPDATE notifications SET status='1'";
 $res = mysqli_query($conn, $sql);
 if ($res) {
@@ -8,4 +7,4 @@ if ($res) {
 } else {
   echo "Failed";
 }
-
+?>
