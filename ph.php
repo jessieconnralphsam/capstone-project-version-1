@@ -474,17 +474,16 @@ if ($data < 7) {
        width: 300,
        chart: {
          title: 'Temperature & Total Dissolved Solids',
-      //subtitle: 'Date'
        },
-       bars: 'vertical', // Required for Material Bar Charts.
+       bars: 'vertical',
        series: {
-         0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
-         1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
+         0: { axis: 'distance' }, 
+         1: { axis: 'brightness' } 
        },
        axes: {
          x: {
-           distance: {label: 'parsecs'}, // Bottom x-axis.
-           brightness: {side: 'top', label: 'apparent magnitude'} // Top x-axis.
+           distance: {label: 'parsecs'},
+           brightness: {side: 'top', label: 'apparent magnitude'}
          }
        }
      };
