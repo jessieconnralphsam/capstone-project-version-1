@@ -244,10 +244,10 @@ if ($data < 7) {
                         <tr>
                            <th>Date & Time</th>
                            <th>Acidity</th>
-                           <th>Total Dissolve solids</th>
+                           <th>Total Dissolved Solids</th>
                            <th>Temperature</th>
                            <th>Water Flow</th>
-                           <th>Water level</th>
+                           <th>Water Level</th>
                         </tr>
                      </thead>
                      <tbody>
