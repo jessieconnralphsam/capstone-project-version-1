@@ -9,9 +9,9 @@ Capstone Group: Capstonics(2023)
 <?php include "data_con.php";?>
 <!--login validation-->
 <?php 
-session_start(); // start the session
-if(!isset($_SESSION['user_id'])){ // check if the session variable is set
-    header('Location: index.php'); // redirect to the login page if it's not set
+session_start(); 
+if(!isset($_SESSION['user_id'])){ 
+    header('Location: index.php'); 
     exit;
 }
 ?>

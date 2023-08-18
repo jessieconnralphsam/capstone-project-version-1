@@ -8,9 +8,9 @@ Capstone Group: Capstonics(2023)
 <?php include "data_con.php";?>
 <!--login validation-->
 <?php 
-session_start(); // start the session
-if(!isset($_SESSION['user_id'])){ // check if the session variable is set
-    header('Location: index.php'); // redirect to the login page if it's not set
+session_start();
+if(!isset($_SESSION['user_id'])){ 
+    header('Location: index.php'); 
     exit;
 }
 ?>
@@ -282,7 +282,7 @@ if ($data < 7) {
                   <img src="image/pH scale.png" alt="Description of the image" width="205" height="440">                  
                </div>
                <p class="medium-small center-align">Current Reading</p>
-               <h5 class="center-align mb-0 mt-0"><span style="color:<?php echo $color; ?>"><?php echo $data; ?></span></h5> <!-- C.R Acidity -->
+               <h5 class="center-align mb-0 mt-0"><span style="color:<?php echo $color; ?>"><?php echo $data; ?></span></h5>
             </div>
          </div>
       </div>
@@ -396,15 +396,15 @@ if ($data < 7) {
          title: 'Temperature & Total Dissolved Solids',
        //subtitle: 'Date'
        },
-       bars: 'vertical', // Required for Material Bar Charts.
+       bars: 'vertical',
        series: {
-         0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
-         1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
+         0: { axis: 'distance' },
+         1: { axis: 'brightness' }
        },
        axes: {
          x: {
-           distance: {label: 'parsecs'}, // Bottom x-axis.
-           brightness: {side: 'top', label: 'apparent magnitude'} // Top x-axis.
+           distance: {label: 'parsecs'},
+           brightness: {side: 'top', label: 'apparent magnitude'}
          }
        }
      };
