@@ -152,7 +152,7 @@ if ($data < 7) {
                     <span style="color: red;">Warning! <?php echo $item["notif_sname"]; ?> reading: <?php echo $item["readings"]; ?></span>
                     <?php echo $formatted_date; ?>
                   </li>
-                  <li class="divider"></li> <!-- Add this line after each notification -->
+                  <li class="divider"></li>
                   <?php
                 }
               }
@@ -461,7 +461,6 @@ if ($data < 7) {
 
               while ($dataTemperature = mysqli_fetch_array($resTemperature)) {
                   $temperature = $dataTemperature['temp_readings'];
-                  // Rest of the code remains the same as in your original code
           ?>
 
           ['<?php echo $datetime;?>', <?php echo $electric_con;?>, <?php echo $temperature;?>],
@@ -475,7 +474,7 @@ if ($data < 7) {
        width: 300,
        chart: {
          title: 'Temperature & Total Dissolved Solids',
-         //subtitle: 'Date'
+      //subtitle: 'Date'
        },
        bars: 'vertical', // Required for Material Bar Charts.
        series: {
@@ -498,7 +497,6 @@ if ($data < 7) {
 <!-- Script: line chart-->
  <script>
     (function (window, document, $) { 
-   //Ph level line chart
    var revenueLineChartCTX = $("#revenue-line-chart");
    //option block
    var revenueLineChartOptions = {
