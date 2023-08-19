@@ -59,11 +59,11 @@ $date = $datetime->format('F-d-Y');
   }
 ?>
 <?php 
-$data = $data_acidity[0]; // assuming $data_acidity[0] contains the value to be displayed
+$curdata = $data_acidity[0]; // assuming $data_acidity[0] contains the value to be displayed
 $color = "";
-if ($data < 7) {
+if ($curdata < 7) {
     $color = "red";
-} elseif ($data > 7) {
+} elseif ($curdata > 7) {
     $color = "red";
 } else {
     $color = "green"; // if value is exactly 7, set color to green
@@ -145,7 +145,7 @@ if ($data < 7) {
                   $formatted_date = date("F-d-Y h:i A", strtotime($item["cdate"]));
                   ?>
                   <li>
-                    <span style="color: red;">Warning!<?php echo $item["notif_sname"]; ?> reading: <?php echo $item["readings"]; ?></span>
+                    <span style="color: red;">Critical<?php echo $item["notif_sname"]; ?>! Reading: <?php echo $item["readings"]; ?></span>
                     <?php echo $formatted_date; ?>
                   </li>
                   <li class="divider"></li> 
@@ -214,7 +214,7 @@ if ($data < 7) {
           <div class="card-move-up waves-effect waves-block waves-light">
             <div class="move-up cyan darken-1">
                <div>
-                  <span class="chart-title white-text"> <strong>pH Level</strong></span>
+                  <span class="chart-title white-text"> <strong>Water Quality</strong></span>
                   <div class="chart-revenue cyan darken-2 white-text">
                      <p class="chart-revenue-total"><?php echo $date; ?></p>
                      <p class="chart-revenue-per"><i class="material-icons">arrow_drop_up</i> <strong>Readings</strong></p>                    
@@ -234,7 +234,7 @@ if ($data < 7) {
                   </div>
           </div>
           <div class="card-reveal">
-                  <span class="card-title grey-text text-darken-4">Readings  <i
+                  <span class="card-title grey-text text-darken-4">Readings: <i
                         class="material-icons right">close</i> <br>
                         <a href="download.php" style="text-decoration: underline;">Download CSV</a>
                   </span>
@@ -257,14 +257,23 @@ if ($data < 7) {
                                 $ldata = mysqli_fetch_assoc($levelconnect);
                                 $acdata = mysqli_fetch_assoc($phconnect);
                                 $tddata = mysqli_fetch_assoc($tdsconnect);
+
+                                // color sa data 
+                                $phColor = ($acdata['acid_readings'] < 7 || $acdata['acid_readings'] > 7) ? 'color: red;' : 'color: green;';
+                                $tdsColor = ($tddata['tds_readings'] > 500 || $tddata['tds_readings'] < 300) ? 'color: red;' : 'color: green;';
+                                $tempColor = ($data['temp_readings'] > 25) ? 'color: red;' : 'color: green;';
+                                $flowColor = ($flowdata['flow_readings'] < 1) ? 'color: red;' : 'color: green;';
+                                $levelColor = ($ldata['level_readings'] <= 10) ? 'color: red;' : 'color: green;';
+
                                 echo "
+
                                 <tr>
                                 <td> ".date('F-d-Y H:i A', strtotime($data['temp_cdate']))."</td>
-                                <td>pH of ".$acdata['acid_readings']."</td>
-                                <td> ".$tddata['tds_readings']." ppm</td>
-                                <td> ".$data['temp_readings']."  °C</td>
-                                <td> ".$flowdata['flow_readings']." L/min</td>
-                                <td> ".$ldata['level_readings']." m</td>
+                                <td style='$phColor'>pH of " . $acdata['acid_readings'] . "</td>
+                                <td style='$tdsColor'>" . $tddata['tds_readings'] . " ppm</td>
+                                <td style='$tempColor'>" . $data['temp_readings'] . " °C</td>
+                                <td style='$flowColor'>" . $flowdata['flow_readings'] . " L/min</td>
+                                <td style='$levelColor'>" . $ldata['level_readings'] . " m</td>
                                 ";
                             }
                           }
@@ -282,7 +291,7 @@ if ($data < 7) {
                   <img src="image/pH scale.png" alt="Description of the image" width="205" height="440">                  
                </div>
                <p class="medium-small center-align">Current Reading</p>
-               <h5 class="center-align mb-0 mt-0"><span style="color:<?php echo $color; ?>"><?php echo $data; ?></span></h5>
+               <h5 class="center-align mb-0 mt-0">pH of <span style="color:<?php echo $color; ?>"><?php echo $curdata; ?></span></h5>
             </div>
          </div>
       </div>
@@ -355,63 +364,66 @@ if ($data < 7) {
         });
       });
     });
-  </script>
+</script>
+
 <!-- Script: Bargraph-->
-<!------------------------------------------------------------------------------>
 <script type="text/javascript">
    google.charts.load('current', {'packages':['bar']});
    google.charts.setOnLoadCallback(drawStuff);
 
    function drawStuff() {
-     var data = new google.visualization.arrayToDataTable([
-       ['Date&Time', 'TDS', 'Temp'],
-       //data config php
-       <?php
-          $queryTDS = "SELECT * FROM total_dissolved_solids ORDER BY tds_cdate DESC LIMIT 1";
-          $resTDS = mysqli_query($conn, $queryTDS);
+     // Define a function to draw the chart with given data
+     function drawChart(chartData) {
+       var data = new google.visualization.arrayToDataTable(chartData);
 
-          while ($dataTDS = mysqli_fetch_array($resTDS)) {
-              $datetime = date('m-d-Y h:i A', strtotime($dataTDS['tds_cdate'])); // add "AM" or "PM"
-              $electric_con = $dataTDS['tds_readings'];
-          ?>
-
-          <?php
-              $queryTemperature = "SELECT * FROM temperature ORDER BY temp_cdate DESC LIMIT 1";
-              $resTemperature = mysqli_query($conn, $queryTemperature);
-
-              while ($dataTemperature = mysqli_fetch_array($resTemperature)) {
-                  $temperature = $dataTemperature['temp_readings'];
-          ?>
-
-          ['<?php echo $datetime;?>', <?php echo $electric_con;?>, <?php echo $temperature;?>],
-
-          <?php   
-              }
-          }
-        ?>                
-     ]);
-     var options = {
-       width: 300,
-       chart: {
-         title: 'Temperature & Total Dissolved Solids',
-       //subtitle: 'Date'
-       },
-       bars: 'vertical',
-       series: {
-         0: { axis: 'distance' },
-         1: { axis: 'brightness' }
-       },
-       axes: {
-         x: {
-           distance: {label: 'parsecs'},
-           brightness: {side: 'top', label: 'apparent magnitude'}
+       var options = {
+         width: 300,
+         chart: {
+           title: 'Temperature & Total Dissolved Solids',
+         },
+         bars: 'vertical',
+         series: {
+           0: { axis: 'distance' },
+           1: { axis: 'brightness' }
+         },
+         axes: {
+           x: {
+             distance: {label: 'parsecs'},
+             brightness: {side: 'top', label: 'apparent magnitude'}
+           }
          }
-       }
-     };
-   var chart = new google.charts.Bar(document.getElementById('dual_x_div'));
-   chart.draw(data, options);  
- };  
- </script>
+       };
+       
+       var chart = new google.charts.Bar(document.getElementById('dual_x_div'));
+       chart.draw(data, options);
+     }    
+     <?php
+        $queryTDS = "SELECT * FROM total_dissolved_solids ORDER BY tds_cdate DESC LIMIT 1";
+        $resTDS = mysqli_query($conn, $queryTDS);
+        $chartData = [];
+
+        while ($dataTDS = mysqli_fetch_array($resTDS)) {
+            $datetime = date('m-d-Y h:i A', strtotime($dataTDS['tds_cdate'])); // add "AM" or "PM"
+            $electric_con = $dataTDS['tds_readings'];
+
+            $queryTemperature = "SELECT * FROM temperature ORDER BY temp_cdate DESC LIMIT 1";
+            $resTemperature = mysqli_query($conn, $queryTemperature);
+
+            while ($dataTemperature = mysqli_fetch_array($resTemperature)) {
+                $temperature = $dataTemperature['temp_readings'];
+
+                // Populate chart data array
+                $chartData[] = "['{$datetime}', {$electric_con}, {$temperature}]";
+            }
+        }
+      ?>     
+     // Call the drawChart function with initial data
+     drawChart([
+       ['Date Time', 'TDS', 'Temp'],
+       <?php echo implode(', ', $chartData); ?>
+     ]);
+   }
+</script>
 <!-- End Script: Bargraph-->
 <!------------------------------------------------------------------------------> 
 <!-- Script: line chart-->
@@ -489,17 +501,17 @@ if ($data < 7) {
       }
   ?>
    var revenueLineChartData = {
-      labels:['Current', <?php echo json_encode($labels[0]); ?>,<?php echo json_encode($labels[1]); ?>, <?php echo json_encode($labels[2]); ?>,<?php echo json_encode($labels[3]); ?>],
+      labels:['Current Readings', <?php echo json_encode($labels[0]); ?>,<?php echo json_encode($labels[1]); ?>, <?php echo json_encode($labels[2]); ?>,<?php echo json_encode($labels[3]); ?>],
       datasets: [
          {
             label: "Acidity",
             data: <?php echo json_encode($data); ?>,
-            backgroundColor: "rgba(128, 222, 234, 0.5)",
-            borderColor: "#d1faff",
-            pointBorderColor: "#d1faff",
+            backgroundColor: "rgba(128, 222, 234, 0.6)",
+            borderColor: "white",
+            pointBorderColor: "white",
             pointBackgroundColor: "#00bcd4",
-            pointHighlightFill: "#A3D977",
-            pointHoverBackgroundColor: "#A3D977",
+            pointHighlightFill: "white",
+            pointHoverBackgroundColor: "white",
             borderWidth: 2,
             pointBorderWidth: 2,
             pointHoverBorderWidth: 4,
@@ -508,13 +520,13 @@ if ($data < 7) {
          {
             label: "Water Flow",
             data: <?php echo json_encode($flowdata); ?>,
-            borderDash: [2, 5],
-            backgroundColor: "rgba(128, 222, 234, 0.2)",
-            borderColor: "#80deea",
-            pointBorderColor: "#80deea",
+            borderDash: [15, 5],
+            backgroundColor: "rgba(128, 222, 234, 0.4)",
+            borderColor: "black",
+            pointBorderColor: "black",
             pointBackgroundColor: "#00bcd4",
-            pointHighlightFill: "#FFD966",
-            pointHoverBackgroundColor: "#FFD966",
+            pointHighlightFill: "black",
+            pointHoverBackgroundColor: "black",
             borderWidth: 2,
             pointBorderWidth: 2,
             pointHoverBorderWidth: 4,
@@ -525,11 +537,11 @@ if ($data < 7) {
             data: <?php echo json_encode($leveldata); ?>,
             borderDash: [15, 5],
             backgroundColor: "rgba(128, 222, 234, 0.2)",
-            borderColor: "#80deea",
-            pointBorderColor: "#80deea",
+            borderColor: "blue",
+            pointBorderColor: "blue",
             pointBackgroundColor: "#00bcd4",
-            pointHighlightFill: "#FFAB91",
-            pointHoverBackgroundColor: "#FFAB91",
+            pointHighlightFill: "blue",
+            pointHoverBackgroundColor: "blue",
             borderWidth: 2,
             pointBorderWidth: 2,
             pointHoverBorderWidth: 4,
