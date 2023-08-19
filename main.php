@@ -48,7 +48,6 @@ $date = $datetime->format('F-d-Y');
 <?php
   // Get the value of $data_TDS[0]
   $value = $data_TDS[0];
-
   // Set the class based on the value
   if ($value < 300) {
     $class = 'red-text';
@@ -59,17 +58,16 @@ $date = $datetime->format('F-d-Y');
   }
 ?>
 <?php 
-$curdata = $data_acidity[0]; // assuming $data_acidity[0] contains the value to be displayed
+$curdata = $data_acidity[0]; 
 $color = "";
 if ($curdata < 7) {
     $color = "red";
 } elseif ($curdata > 7) {
     $color = "red";
 } else {
-    $color = "green"; // if value is exactly 7, set color to green
+    $color = "green";
 }
 ?>
-
 <!-- data for table -->
 <?php
   $datequery="SELECT * FROM temperature ORDER BY temp_cdate DESC";
@@ -372,7 +370,6 @@ if ($curdata < 7) {
    google.charts.setOnLoadCallback(drawStuff);
 
    function drawStuff() {
-     // Define a function to draw the chart with given data
      function drawChart(chartData) {
        var data = new google.visualization.arrayToDataTable(chartData);
 
@@ -403,7 +400,7 @@ if ($curdata < 7) {
         $chartData = [];
 
         while ($dataTDS = mysqli_fetch_array($resTDS)) {
-            $datetime = date('m-d-Y h:i A', strtotime($dataTDS['tds_cdate'])); // add "AM" or "PM"
+            $datetime = date('m-d-Y h:i A', strtotime($dataTDS['tds_cdate']));
             $electric_con = $dataTDS['tds_readings'];
 
             $queryTemperature = "SELECT * FROM temperature ORDER BY temp_cdate DESC LIMIT 1";
@@ -411,13 +408,10 @@ if ($curdata < 7) {
 
             while ($dataTemperature = mysqli_fetch_array($resTemperature)) {
                 $temperature = $dataTemperature['temp_readings'];
-
-                // Populate chart data array
                 $chartData[] = "['{$datetime}', {$electric_con}, {$temperature}]";
             }
         }
       ?>     
-     // Call the drawChart function with initial data
      drawChart([
        ['Date Time', 'TDS', 'Temp'],
        <?php echo implode(', ', $chartData); ?>

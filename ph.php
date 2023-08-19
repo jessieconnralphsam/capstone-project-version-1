@@ -36,7 +36,7 @@ if(!isset($_SESSION['user_id'])){
 
 <!-- split datetime-->
 <?php
-$date_str = $data_date[0]; // assuming $data_date[0] contains the datetime string
+$date_str = $data_date[0]; 
 $datetime = new DateTime($date_str);
 $date = $datetime->format('F-d-Y');
 ?>
@@ -47,10 +47,7 @@ $date = $datetime->format('F-d-Y');
 
 <!-- TDS fetch value -->
 <?php
-  // Get the value of $data_TDS[0]
   $value = $data_TDS[0];
-
-  // Set the class based on the value
   if ($value < 300) {
     $class = 'red-text';
   } else if ($value >= 300 && $value <= 800) {
@@ -60,14 +57,14 @@ $date = $datetime->format('F-d-Y');
   }
 ?>
 <?php 
-$curdata = $data_acidity[0]; // assuming $data_acidity[0] contains the value to be displayed
+$curdata = $data_acidity[0]; 
 $color = "";
 if ($curdata < 7) {
     $color = "red";
 } elseif ($curdata > 7) {
     $color = "red";
 } else {
-    $color = "green"; // if value is exactly 7, set color to green
+    $color = "green"; 
 }
 ?>
 

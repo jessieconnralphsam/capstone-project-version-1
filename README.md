@@ -9,22 +9,23 @@ This is the README file for the IOT Based Decision Support System for NFT Hydrop
 
 **Overview**
 Hydroponics is a method of growing plants in nutrient-rich water without soil. NFT is a type of hydroponic system where a thin layer of water is circulated over the roots of the plants. ISE sensors are used to measure the concentration of ions in the water, which is critical for maintaining optimal nutrient levels for plant growth.
-
 The IOT Based Decision Support System for NFT Hydroponics Cultured Monitored to Ion Selective Electrodes project provides a platform for monitoring the ISE sensors in real-time, alerting the farmer when the nutrient levels fall below or exceed the desired range, and providing recommendations for adjusting the nutrient levels based on historical data.
 
 **Features**
 The key features of this project include:
 
-Integration with ISE sensors to measure temperature, acidity, total dissolved solids, water flow and water level in real-time
-Real-time monitoring
-Automatic alerts when nutrient levels fall below or exceed the desired range
-Historical data analysis
-User-friendly dashboard for visualizing the sensor data and making adjustments
-Integration with an IOT device for remote access to the system
+-Integration with ISE sensors to measure temperature, acidity, total dissolved solids, water flow and water level in real-time
+-Real-time monitoring
+-Automatic alerts when nutrient levels fall below or exceed the desired range
+-Historical data
+-User-friendly dashboard for visualizing the sensor data
+-Integration with an IOT device for remote access to the system
+
 Dependencies
 **This project was developed using various software tool, frameworks and libraries, including:**
 Arduino Uno (for the IOT device)
 GSM module
+materialize
 PHP (backend)
 bootstrap
 chart.js
