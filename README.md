@@ -3,6 +3,7 @@
 ### default
 ### UserName : jessiesam@gmail.com
 ### Password : 12345
+### URL for http req: http://localhost/capstone-Project/http.php?waterflow=value&waterlevel=value&acidity=value&tds=value&temperature=value
 
 
 This is the README file for the IOT Based Decision Support System for NFT Hydroponics Cultured Monitored to Ion Selective Electrodes capstone project. The purpose of this project is to provide a real-time monitoring and decision support system for hydroponics farmers using nutrient film technique (NFT) and ion selective electrodes (ISE) sensors.

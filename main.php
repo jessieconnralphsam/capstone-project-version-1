@@ -286,7 +286,7 @@ if ($curdata < 7) {
             <div class="card-content">
                <h4 class="card-title mb-0">pH level Conversion</h4>
                <div class="conversion-ration-container mt-8">
-                  <img src="image/pH scale.png" alt="Description of the image" width="205" height="440">                  
+                  <img src="image/pH scale.png" alt="Description of the image" width="205" height="410">                  
                </div>
                <p class="medium-small center-align">Current Reading</p>
                <h5 class="center-align mb-0 mt-0">pH of <span style="color:<?php echo $color; ?>"><?php echo $curdata; ?></span></h5>
@@ -363,7 +363,6 @@ if ($curdata < 7) {
       });
     });
 </script>
-
 <!-- Script: Bargraph-->
 <script type="text/javascript">
    google.charts.load('current', {'packages':['bar']});
@@ -372,7 +371,6 @@ if ($curdata < 7) {
    function drawStuff() {
      function drawChart(chartData) {
        var data = new google.visualization.arrayToDataTable(chartData);
-
        var options = {
          width: 300,
          chart: {
@@ -411,11 +409,11 @@ if ($curdata < 7) {
                 $chartData[] = "['{$datetime}', {$electric_con}, {$temperature}]";
             }
         }
-      ?>     
-     drawChart([
-       ['Date Time', 'TDS', 'Temp'],
-       <?php echo implode(', ', $chartData); ?>
-     ]);
+      ?>
+      drawChart([
+              ['Date Time', 'TDS', 'Temp'],
+              <?php echo implode(', ', $chartData); ?>
+            ]);
    }
 </script>
 <!-- End Script: Bargraph-->
