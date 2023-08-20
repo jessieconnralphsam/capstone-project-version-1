@@ -22,7 +22,7 @@
 					<img src="image/hydroponicslogo.jpeg" alt="Description of the image" width="100" height="100">
 				</div>
 			</div>
-			<h5 class="text-center text-blue">HYDROPONICS NFT DECISION SUPPORT SYSTEM</h5>
+			<h5 class="text-center text-blue">NFT HYDROPONICS DECISION SUPPORT SYSTEM</h5>
 	  		<h5 class="text-center">LOGIN</h5>
 	  		<?php if (isset($_GET['error'])) { ?>
 	  		<div class="alert alert-danger" role="alert">
@@ -31,23 +31,21 @@
 		    <?php } ?>
 
 		  <div class="mb-3">
-		    <label for="exampleInputEmail1" 
-		           class="form-label">Username
-		    </label>
+			<br>
+			<br>
 		    <input type="email" 
 		           name="email" 
+				   placeholder="Email"
 		           value="<?php if(isset($_GET['email']))echo(htmlspecialchars($_GET['email'])) ?>" 
 		           class="form-control" 
 		           id="exampleInputEmail1" aria-describedby="emailHelp">
 		  </div>
 		  
 		  <div class="mb-3">
-		    <label for="exampleInputPassword1" 
-		           class="form-label">Password
-		    </label>
 		    <input type="password" 
 		           class="form-control" 
 		           name="password" 
+				   placeholder="Password"
 		           id="exampleInputPassword1">
 		  </div>
 		  <button type="submit" 
@@ -55,6 +53,33 @@
 		  </button>
 		</form>
 	  </div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const textElement = document.querySelector(".text-blue");
+  const text = "NFT HYDROPONICS DECISION SUPPORT SYSTEM";
+
+  function typeText() {
+    let index = 0;
+
+    function updateText() {
+      textElement.textContent = text.slice(0, index);
+      index++;
+
+      if (index <= text.length) {
+        setTimeout(updateText, 60);
+      } else {
+        index = 0; 
+        setTimeout(updateText, 1000);
+      }
+    }
+
+    updateText();
+  }
+
+  typeText();
+});
+</script>
+
 </body>
 </html>
 <?php 
