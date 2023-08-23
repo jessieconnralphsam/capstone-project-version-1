@@ -1,85 +1,31 @@
 <?php
 include "data_con.php";
 
+if (isset($_GET['getLatestData'])) {
+    $queryTDS = "SELECT * FROM total_dissolved_solids ORDER BY tds_cdate DESC LIMIT 1";
+    $resultTDS = $conn->query($queryTDS);
 
-$response = array("status" => "", "message" => "");
+    if ($resultTDS->num_rows > 0) {
+        $rowTDS = $resultTDS->fetch_assoc();
+        $latestData = [
+            "datetime" => date('m-d-Y h:i A', strtotime($rowTDS['tds_cdate'])),
+            "electric_con" => $rowTDS['tds_readings']
+        ];
 
+        $queryTemperature = "SELECT * FROM temperature ORDER BY temp_cdate DESC LIMIT 1";
+        $resultTemperature = $conn->query($queryTemperature);
 
-if (isset($_GET['waterflow'])) {
-    $waterflow = $conn->real_escape_string($_GET['waterflow']);
-    $waterflowSql = "INSERT INTO waterflow (flow_readings) VALUES ('$waterflow')";
-    if ($conn->query($waterflowSql) === TRUE) {
-        $response["status"] = "success";
-        $response["message"] = "Waterflow data inserted successfully!";
-    } else {
-        $response["status"] = "error";
-        $response["message"] = "Error inserting waterflow data: " . $conn->error;
-    }
-}
+        if ($resultTemperature->num_rows > 0) {
+            $rowTemperature = $resultTemperature->fetch_assoc();
+            $latestData["temperature"] = $rowTemperature['temp_readings'];
+        } else {
+            $latestData["temperature"] = 0;
+        }
 
-if (isset($_GET['waterlevel'])) {
-    $waterlevel = $conn->real_escape_string($_GET['waterlevel']);
-    $waterlevelSql = "INSERT INTO waterlevel (level_readings) VALUES ('$waterlevel')";
-    if ($conn->query($waterlevelSql) === TRUE) {
-        $response["status"] = "success";
-        $response["message"] = "Waterlevel data inserted successfully!";
+        echo json_encode($latestData);
     } else {
-        $response["status"] = "error";
-        $response["message"] = "Error inserting waterlevel data: " . $conn->error;
+        echo json_encode(["error" => "No data available"]);
     }
+    exit(); 
 }
-if (isset($_GET['acidity'])) {
-    $acidity = $conn->real_escape_string($_GET['acidity']);
-    $aciditySql = "INSERT INTO acidity (acid_readings) VALUES ('$acidity')";
-    if ($conn->query($aciditySql) === TRUE) {
-        $response["status"] = "success";
-        $response["message"] = "Acidity data inserted successfully!";
-    } else {
-        $response["status"] = "error";
-        $response["message"] = "Error inserting Acidity data: " . $conn->error;
-    }
-}
-if (isset($_GET['tds'])) {
-    $tds = $conn->real_escape_string($_GET['tds']);
-    $tdsSql = "INSERT INTO total_dissolved_solids (tds_readings) VALUES ('$tds')";
-    if ($conn->query($tdsSql) === TRUE) {
-        $response["status"] = "success";
-        $response["message"] = "tds data inserted successfully!";
-    } else {
-        $response["status"] = "error";
-        $response["message"] = "Error inserting tds data: " . $conn->error;
-    }
-}
-if (isset($_GET['temperature'])) {
-    $temp = $conn->real_escape_string($_GET['temperature']);
-    $tempSql = "INSERT INTO temperature (temp_readings) VALUES ('$temp')";
-    if ($conn->query($tempSql) === TRUE) {
-        $response["status"] = "success";
-        $response["message"] = "Temperature data inserted successfully!";
-    } else {
-        $response["status"] = "error";
-        $response["message"] = "Error inserting Temperature data: " . $conn->error;
-    }
-}
-
-echo json_encode($response);
-// $conn->close();
 ?>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Enter Water Data</title>
-</head>
-<body>
-    <h2>Enter Water Data</h2>
-    <form action="" method="get">
-        Water Flow: <input type="text" name="waterflow"><br>
-        Water Level: <input type="text" name="waterlevel"><br>
-        Acidity: <input type="text" name="acidity"><br>
-        TDS: <input type="text" name="tds"><br>
-        Temperature: <input type="text" name="temperature"><br>
-        <input type="submit" value="Submit">
-    </form>
-</body>
-</html>

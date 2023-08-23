@@ -56,7 +56,7 @@
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const textElement = document.querySelector(".text-blue");
-  const text = "NFT HYDROPONICS DECISION SUPPORT SYSTEM";
+  const text = "NFT HYDROPONICS SYSTEM";
 
   function typeText() {
     let index = 0;
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function() {
       index++;
 
       if (index <= text.length) {
-        setTimeout(updateText, 60);
+        setTimeout(updateText, 100);
       } else {
         index = 0; 
         setTimeout(updateText, 1000);

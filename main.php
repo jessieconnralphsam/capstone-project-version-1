@@ -114,7 +114,9 @@ if ($curdata < 7) {
     <link rel="stylesheet" type="text/css" href="css/dashboard-modern.css">
     <link rel="stylesheet" type="text/css" href="css/intro.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    </script>
     <!-- END: Page Level CSS-->
   </head>
   <!-- END: Head-->
@@ -366,54 +368,54 @@ if ($curdata < 7) {
 <!-- Script: Bargraph-->
 <script type="text/javascript">
    google.charts.load('current', {'packages':['bar']});
-   google.charts.setOnLoadCallback(drawStuff);
+   google.charts.setOnLoadCallback(initializeChart);
 
-   function drawStuff() {
-     function drawChart(chartData) {
-       var data = new google.visualization.arrayToDataTable(chartData);
-       var options = {
-         width: 300,
-         chart: {
-           title: 'Temperature & Total Dissolved Solids',
-         },
-         bars: 'vertical',
-         series: {
-           0: { axis: 'distance' },
-           1: { axis: 'brightness' }
-         },
-         axes: {
-           x: {
-             distance: {label: 'parsecs'},
-             brightness: {side: 'top', label: 'apparent magnitude'}
-           }
+   function initializeChart() {
+     var options = {
+       width: 300,
+       chart: {
+         title: 'Temperature & Total Dissolved Solids',
+       },
+       bars: 'vertical',
+       series: {
+         0: { axis: 'TDS' },
+         1: { axis: 'Temp' }
+       },
+       axes: {
+         x: {
+           TDS: {label: 'parsecs'},
+           Temp: {side: 'top', label: 'apparent magnitude'}
          }
-       };
-       
-       var chart = new google.charts.Bar(document.getElementById('dual_x_div'));
-       chart.draw(data, options);
-     }    
-     <?php
-        $queryTDS = "SELECT * FROM total_dissolved_solids ORDER BY tds_cdate DESC LIMIT 1";
-        $resTDS = mysqli_query($conn, $queryTDS);
-        $chartData = [];
+       }
+     };
 
-        while ($dataTDS = mysqli_fetch_array($resTDS)) {
-            $datetime = date('m-d-Y h:i A', strtotime($dataTDS['tds_cdate']));
-            $electric_con = $dataTDS['tds_readings'];
+     var chart = new google.charts.Bar(document.getElementById('dual_x_div'));
 
-            $queryTemperature = "SELECT * FROM temperature ORDER BY temp_cdate DESC LIMIT 1";
-            $resTemperature = mysqli_query($conn, $queryTemperature);
 
-            while ($dataTemperature = mysqli_fetch_array($resTemperature)) {
-                $temperature = $dataTemperature['temp_readings'];
-                $chartData[] = "['{$datetime}', {$electric_con}, {$temperature}]";
-            }
+    function updateChart() {
+      $.ajax({
+        url: 'http.php?getLatestData=true', 
+        dataType: 'json',
+        success: function(data) {
+          var chartData = [['Date Time', 'TDS', 'Temp']];
+          var row = [
+            data.datetime,
+            parseFloat(data.electric_con),
+            parseFloat(data.temperature)
+          ];
+          chartData.push(row);
+          var dataTable = google.visualization.arrayToDataTable(chartData);
+          chart.draw(dataTable, google.charts.Bar.convertOptions(options));
         }
-      ?>
-      drawChart([
-              ['Date Time', 'TDS', 'Temp'],
-              <?php echo implode(', ', $chartData); ?>
-            ]);
+      });
+    }
+
+    //  render ang chart
+    updateChart();
+
+    //ga update sa chart periodically
+    setInterval(updateChart, 5000);
+
    }
 </script>
 <!-- End Script: Bargraph-->
