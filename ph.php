@@ -117,7 +117,9 @@ if ($curdata < 7) {
     <link rel="stylesheet" type="text/css" href="css/dashboard-modern.css">
     <link rel="stylesheet" type="text/css" href="css/intro.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    </script>
     <!-- END: Page Level CSS-->
   </head>
   <!-- END: Head-->
@@ -627,9 +629,9 @@ if ($curdata < 7) {
       data: revenueLineChartData
    };
    // Create the chart
-   window.onload = function () {
-      revenueLineChart = new Chart(revenueLineChartCTX, revenueLineChartConfig);
-   };
+   // window.onload = function () {
+   revenueLineChart = new Chart(revenueLineChartCTX, revenueLineChartConfig);
+   // };
 })(window, document, jQuery);
 </script>
 <!-- End Script: line chart-->

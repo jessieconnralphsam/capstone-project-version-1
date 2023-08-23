@@ -463,10 +463,10 @@ if ($curdata < 7) {
       }
    };
    //data block
-   var labels = [];
-   var data = [];
-   var flowdata = [];
-   var leveldata = [];
+  //  var labels = [];
+  //  var data = [];
+  //  var flowdata = [];
+  //  var leveldata = [];
   <?php
       $query = "SELECT * FROM acidity ORDER BY acid_cdate DESC LIMIT 5";
       $result = mysqli_query($conn, $query);
@@ -550,9 +550,27 @@ if ($curdata < 7) {
       data: revenueLineChartData
    };
    // Create the chart
-   window.onload = function () {
-      revenueLineChart = new Chart(revenueLineChartCTX, revenueLineChartConfig);
-   };
+  //  window.onload = function () {
+  revenueLineChart = new Chart(revenueLineChartCTX, revenueLineChartConfig);
+  // function updatemyChart() {
+  //       $.ajax({
+  //         url: 'insert.php', 
+  //         dataType: 'json',
+  //         success: function(data) {
+  //           if (data.status === 'success') {
+  //               revenueLineChart.destroy();
+  //               revenueLineChart = new Chart(revenueLineChartCTX, revenueLineChartConfig);
+  //           } 
+  //         }
+  //       });
+  //     }
+
+  //     //  render ang chart
+  // updatemyChart();
+
+  //     //ga update sa chart periodically
+  // setInterval(updatemyChart, 5000);  
+  //  };
 })(window, document, jQuery);
 </script>
 <!-- End Script: line chart-->

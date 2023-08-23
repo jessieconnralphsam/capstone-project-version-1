@@ -63,10 +63,8 @@ if (isset($_GET['temperature'])) {
 }
 
 echo json_encode($response);
-// $conn->close();
 ?>
-
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <title>Enter Water Data</title>
@@ -82,4 +80,4 @@ echo json_encode($response);
         <input type="submit" value="Submit">
     </form>
 </body>
-</html>
+</html> -->
